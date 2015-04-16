@@ -1,0 +1,21 @@
+{
+	"name": "theMenu",
+	"version": "0.1.0",
+	"homepage": "theMenu.jrdbnntt.com",
+	"authors": [
+		"jrdbnntt <jrdbnntt@gmail.com>"
+	],
+	"license": "Apache 2.0",
+	"private": true,
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests"
+	],
+	"dependencies": {
+		"bootstrap": "~3.3.2",
+		"jquery": "~2.1.3"
+	}
+}

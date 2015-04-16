@@ -1,0 +1,7 @@
+node_modules
+.dropbox*
+desktop.ini
+.env
+node-debug.log
+public/bower_components
+sftp-config.json

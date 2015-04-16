@@ -1,0 +1,26 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "public/*"
+  ],
+  "verbose": false,
+  "quiet": true,
+  "events": {
+    "restart": "echo -e \"\\n\\033[0;32m*********************************************\\n\\033[1;34m'${FILENAME}' has been changed\\n\\033[0;32m************* RESTARTING NODE ***************\\n\\033[0m\""
+  },
+  "watch": [
+    "app/controllers/*",
+    "app/helpers/*",
+    "app/models/*",
+    "boot/*",
+    "emails/*",
+    "lib/*"
+  ],
+  "env": {
+    "DEV_MODE": true
+  },
+  "ext": "js json coffee",
+  "delay": "2"
+}

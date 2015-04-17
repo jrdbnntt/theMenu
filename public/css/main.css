@@ -1,9 +1,101 @@
 /**
  * THEME COLORS http://coolors.co/44355b-31263e-221e22-eca72c-ee5622
- *  - #44355B
- *  - #31263E
- *  - #221E22
- *  - #ECA72C
- *  - #EE5622
+ *  base bg - #21192d
+ *  content bg - #31263E
+ *  grey nav - #221E22
+ *  orange - #ECA72C
  * 
  */
+
+/*****************************************************************************
+ * BASE DOMS
+ */
+html, body {
+	height: 100%;
+	background-color: #21192d;
+	/*color: #EE5622;*/
+}
+#content {
+	background-color: #BBA7A5;
+	padding-bottom: 0px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+#content-header {
+	margin-left: 250px;
+	margin-top: 111px;
+	height: 85px;
+}
+@media (max-width: 768px) {
+	#content-header {
+		margin-left: 0px;
+		margin-top: 219px;
+	}
+}
+
+.footer-spacer {
+	height: 10em;
+}
+.footer {
+	height: 5em;
+	background-color: #221E22;
+}
+
+@media (min-width: 1000px) {
+	.container {
+		width: 1000px;
+	}
+}
+@media (max-width: 1000px) {
+	.container {
+		width: 100%;
+	}
+}
+
+/*****************************************************************************
+ * NAV
+ */
+.navbar-brand {
+	padding: 0.5em 1em;
+}
+.navbar-inverse {
+	background-color: #221E22;
+}
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover {
+	background-color: #BBA7A5;
+	color: #221E22;
+	font-weight: bold;
+}
+#navLogo {
+	margin-left: 35px;
+}
+#banner {
+	padding: 1em;
+}
+
+
+
+
+
+
+
+
+/*****************************************************************************
+ * ICONS
+ */
+.logo {
+	background-repeat: no-repeat;
+	display: block;
+	background-position: center center;
+}
+.logo.logo-s {
+	background-image: url('/img/logo/theMenu-logo-s.png');
+	width: 200px;
+	height: 167px;
+}
+.logo.logo-xs {
+	background-image: url('/img/logo/theMenu-logo-xs.png');
+	width: 100px;
+	height: 83px;
+}

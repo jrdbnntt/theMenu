@@ -1,5 +1,9 @@
 module.exports = (app) ->
 	class app.UserController
-		@index = (req, res) ->
-			res.render 'index',
-				title: 'Home'
+		@logout = (req, res)->
+			req.session.user = undefined
+			res.redirect '/'
+			
+		@profile = (req, res) ->
+			res.render 'user/profile',
+				title: 'Profile'

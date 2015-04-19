@@ -14,42 +14,30 @@ module.exports = (app) ->
 			if req.body.username? &&
 			req.body.email? &&
 			req.body.password?
-				app.models.Account.checkUsernameUsed req.body.username
-				.then (validUsername)->
-					if validUsername
-						app.models.Account.checkEmailUsed req.body.email
-						.then (validEmail)->
-							if validEmail
-								# Looks good, create it
-								app.models.Account.createNew
-									username: req.body.username
-									email: req.body.email
-									password: req.body.password
-								.then ()->
-									console.log 'ACCOUNT CREATED: ' + req.body.username
-									res.send
-										success: true
-										body: {}
-								, (err)->
-									res.send
-										success: false
-										body:
-											error: err
-							else
-								res.send
-									success: false
-									body:
-										error: 'Email is already in use!'
+				app.models.Account.checkUsernameUnused req.body.username
+				.then ()->
+					app.models.Account.checkEmailUnused req.body.email
+					.then ()->
+						# Looks good, create it
+						app.models.Account.createNew
+							username: req.body.username
+							email: req.body.email
+							password: req.body.password
+						.then ()->
+							console.log 'ACCOUNT CREATED: ' + req.body.username
+							res.send
+								success: true
+								body: {}
 						, (err)->
 							res.send
 								success: false
-								body:
+								body: 
 									error: err
-					else
+					, (err)->
 						res.send
 							success: false
 							body:
-								error: 'Username is already in use!'
+								error: err
 				, (err)->
 					res.send
 						success: false
@@ -68,10 +56,25 @@ module.exports = (app) ->
 				title: 'Login'
 		
 		@login_submit = (req, res)->
-			res.send
-				success: true
-				body: {}
+			if req.body.email? &&
+			req.body.password?
+				app.models.Account.checkLogin 
+					email: req.body.email
+					password: req.body.password
+				.then (result)->
+					req.session.user = result
+					res.send
+						success: true
+						body:
+							username: result.username
+				, (err)->
+					res.send
+						success: false
+						body:
+							error: err
+			else
+				res.send
+					success: false
+					body:
+						error: 'Invalid Parameters ' + JSON.stringify req.body
 		
-		@logout = (req, res)->
-			req.session.user = undefined
-			res.redirect '/'

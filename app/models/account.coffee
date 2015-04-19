@@ -55,7 +55,7 @@ module.exports = (app) ->
 			return def.promise
 		
 		# Checks if this email belongs to a user. Returns true/false in promise
-		@checkEmailUsed: (email) ->
+		@checkEmailUnused: (email) ->
 			def = app.Q.defer()
 			sql = app.vsprintf 'SELECT COUNT(*) AS c FROM %s WHERE %s = "%s"'
 			, [
@@ -68,7 +68,10 @@ module.exports = (app) ->
 			con.query sql
 			.on 'result', (res)->
 				res.on 'row', (row)->
-					def.resolve row.c == '0'
+					if row.c == '0'
+						def.resolve()
+					else
+						def.reject 'Email already in use'
 			.on 'error', (err)->
 				console.log "> DB: Error on old threadId " + this.tId + " = " + err
 				def.reject()
@@ -77,7 +80,7 @@ module.exports = (app) ->
 			
 			return def.promise
 		
-		@checkUsernameUsed: (username) ->
+		@checkUsernameUnused: (username) ->
 			def = app.Q.defer()
 			sql = app.vsprintf 'SELECT COUNT(*) AS c FROM %s WHERE %s = "%s"'
 			, [
@@ -90,7 +93,10 @@ module.exports = (app) ->
 			con.query sql
 			.on 'result', (res)->
 				res.on 'row', (row)->
-					def.resolve row.c == '0'
+					if row.c == '0'
+						def.resolve()
+					else
+						def.reject 'Username already in use'
 			.on 'error', (err)->
 				console.log "> DB: Error on old threadId " + this.tId + " = " + err
 				def.reject()
@@ -102,11 +108,16 @@ module.exports = (app) ->
 		#checks if it is a valid login
 		@checkLogin: (data) ->
 			def = app.Q.defer()
-			sql = app.vsprintf 'SELECT * FROM %s WHERE %s = "%s"'
+			sql = app.vsprintf 'SELECT %s,%s,%s,%s,%s FROM %s WHERE %s = "%s" LIMIT 1'
 			, [
-				TNAME
+				COL.accountId
+				COL.username
 				COL.email
-				data.email
+				COL.password
+				COL.isAdmin
+				
+				TNAME
+				COL.email, data.email
 			]
 			console.log sql
 			accountData = {}
@@ -138,7 +149,7 @@ module.exports = (app) ->
 						def.reject 'Invalid login credentials'
 			.on 'error', (err)->
 				console.log "> DB: Error on old threadId " + this.tId + " = " + err
-				def.reject 'A problem occured checking login credentials'
+				def.reject err
 				
 			con.end()
 			return def.promise

@@ -1,6 +1,24 @@
 extend ../layout
 block content-header
-	h1 #{title}
+	h1 Log in
 
 block content-body
-	p sdigfas dfasd
+	.formResult
+	form#loginForm.form-horizontal(role="form" method="post")
+		.form-group
+			label.control-label.col-sm-4(for="email") Email
+			.col-sm-4
+				input.form-control(type="email" name="email" placeholder="Enter your email"  maxlength='85' required)
+		.form-group
+			label.control-label.col-sm-4(for="password") Password
+			.col-sm-4
+				input.form-control(type="password" name="password" placeholder="Enter your password"  maxlength='256' required)
+		
+		br
+		.form-group
+			.formError.col-sm-offset-4.col-sm-2
+			.col-sm-2.text-right
+				button#submit.btn.btn-default(type="submit") Submit
+
+block localJS
+	script(type='text/javascript' src='/js/public/login.js')

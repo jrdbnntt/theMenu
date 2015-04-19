@@ -30,10 +30,17 @@ module.exports = (app) ->
 	# Log in/out
 	app.get '/login', app.PublicController.login
 	app.post '/login', jsonParser, app.PublicController.login_submit
-	app.get '/logout', app.PublicController.logout
+	
 	
 	###########################################################################
 	# USER PAGES 
+	# Profile
+	app.get '/user/', app.UserController.profile
+	app.get '/user/profile', app.UserController.profile
+	
+	# Logout
+	app.get '/logout', app.UserController.logout
+	
 	
 	###########################################################################
 	# ADMIN PAGES

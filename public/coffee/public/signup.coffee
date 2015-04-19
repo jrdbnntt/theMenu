@@ -37,8 +37,9 @@ $(FORM_ID).submit (e) ->
 			success: (res) ->
 				if res.success
 					endInSuccess()
+					window.location.replace '/login'
 				else
-					endInError(res.body.error)
+					endInError res.body.error
 					return
 			error: () ->
 				endInError()
@@ -114,6 +115,7 @@ displayEnd = (header, subtext) ->
 		$(FORM_ID+' select').attr('disabled','disabled');
 		$(FORM_ID).fadeTo 1000, 0, ()->
 			#create message
+			$(FORM_ID).empty()
 			$newMsg = $("<div id='endDisplay'><h3>"+header+ "</h3><h4>"+subtext+"</h4>")
 			$newMsg.appendTo($(FORM_RESULT_CLASS)).fadeIn 1000, ()->
 				$("html, body").animate({ scrollTop: 0 }, 500)

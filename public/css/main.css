@@ -1,7 +1,7 @@
 /**
  * THEME COLORS http://coolors.co/44355b-31263e-221e22-eca72c-ee5622
  *  base bg - #21192d
- *  content bg - #31263E
+ *  content bg - #DDF2E9
  *  grey nav - #221E22
  *  orange - #ECA72C
  * 
@@ -13,20 +13,24 @@
 html, body {
 	height: 100%;
 	background-color: #21192d;
-	/*color: #EE5622;*/
+	font-size: 16px;
 }
 #content {
-	background-color: #BBA7A5;
+	background-color: #DDF2E9;
 	padding-bottom: 0px;
 	padding-left: 50px;
 	padding-right: 50px;
+	min-height: 100%;
+	padding-bottom: 10em; /* footer */
 }
 
 #content-header {
 	margin-left: 250px;
 	margin-top: 111px;
-	height: 85px;
+	height: 118px;
 }
+
+
 @media (max-width: 768px) {
 	#content-header {
 		margin-left: 0px;
@@ -34,10 +38,8 @@ html, body {
 	}
 }
 
-.footer-spacer {
-	height: 10em;
-}
 .footer {
+	margin-top: -5em;
 	height: 5em;
 	background-color: #221E22;
 }
@@ -63,7 +65,7 @@ html, body {
 	background-color: #221E22;
 }
 .navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover {
-	background-color: #BBA7A5;
+	background-color: #DDF2E9;
 	color: #221E22;
 	font-weight: bold;
 }

@@ -16,15 +16,27 @@ module.exports = (app) ->
 	# Enforce ACL
 	app.use acl
 	
-	
-	# PUBLIC PAGES ############################################################
+	###########################################################################
+	# PUBLIC PAGES
 	# Site Home
 	app.get '/', app.PublicController.index
 	app.get '/home', app.PublicController.index
 	app.get '/index', app.PublicController.index
 	
+	# Sign up
+	app.get '/signup', app.PublicController.signup
+	app.post '/signup', jsonParser, app.PublicController.signup_submit
 	
-	# USER PAGES ##############################################################
+	# Log in/out
+	app.get '/login', app.PublicController.login
+	app.post '/login', jsonParser, app.PublicController.login_submit
+	app.get '/logout', app.PublicController.logout
+	
+	###########################################################################
+	# USER PAGES 
+	
+	###########################################################################
+	# ADMIN PAGES
 	
 	
 	# Page not found (404) ####################################################

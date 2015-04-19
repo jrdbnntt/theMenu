@@ -36,27 +36,23 @@ html(lang='en')
 						//- Always display
 						li(class = (title == 'Home'?'active':undefined))
 							a(href='/') Home
-						li(class = (title == '123'?'active':undefined))
-							a(href='/') Login
-						li(class = (title == '4124'?'active':undefined))
-							a(href='/') Signup
+						
+						if session.user === undefined
+							li(class = (title == 'Login'?'active':undefined))
+								a(href='/login') Log in
+							li(class = (title == 'Signup'?'active':undefined))
+								a(href='/signup') Sign up
+						else
+							li
+								a(href='/logout') Log out
 
-						//- - console.log('SESSION: ' + JSON.stringify(session, undefined, 2))
-						if session.user !== undefined && session.user.roleId >= hvz.roles.USER.id
-							li(class = (title == 'Game - Report Kill'?'active':undefined))
-								a(href='/game/kill') Report Kill
-							li(class = (title == 'User - Clarification Requests'?'active':undefined))
-								a(href='/user/cRequestView') Clarifications
-		
-		
 	
 		#content.container
 			#content-header
-				h1 Rawrrasd asd asd
+				block content-header
 			#content-body
-				block content
+				block content-body
 			
-			.footer-spacer
 		.footer.container
 
 

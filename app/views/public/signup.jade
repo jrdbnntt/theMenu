@@ -1,6 +1,31 @@
 extend ../layout
 block content-header
-	h1 #{title}
+	h1 Create New Account
 
 block content-body
-	p asdfasdf
+	.formResult
+	form#signupForm.form-horizontal(role="form")
+		.form-group
+			label.control-label.col-sm-4(for="username") Username
+			.col-sm-4
+				input.form-control(type="text" name="username" placeholder="Enter a username" maxlength='45' required)
+		.form-group
+			label.control-label.col-sm-4(for="email") Email
+			.col-sm-4
+				input.form-control(type="email" name="email" placeholder="Enter your email"  maxlength='85' required)
+				input.form-control(type="email" name="email2" placeholder="Verify Email"  maxlength='85' required)
+		
+		.form-group
+			label.control-label.col-sm-4(for="password") Password
+			.col-sm-4
+				input.form-control(type="password" name="password" placeholder="Enter a password"  maxlength='256' required)
+				input.form-control(type="password" name="password2" placeholder="Verify Password"  maxlength='256' required)
+		
+		br
+		.form-group
+			.formError.col-sm-4.col-sm-offset-2
+			.col-sm-2.text-right
+				button#submit.btn.btn-default(type="submit") Submit
+
+block localJS
+	script(type='text/javascript' src='/js/public/signup.js')

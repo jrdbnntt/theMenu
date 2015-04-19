@@ -39,7 +39,7 @@ module.exports = (app) ->
 	app.get '/user/profile', app.UserController.profile
 	
 	# Logout
-	app.get '/logout', app.UserController.logout
+	app.get '/user/logout', app.UserController.logout
 	
 	
 	###########################################################################

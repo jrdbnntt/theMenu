@@ -42,7 +42,7 @@ module.exports = (app) ->
 						hash
 						0 #false
 					]
-					console.log sql
+					# console.log sql
 					con = app.db.newCon()
 					con.query sql
 					.on 'error', (err)->
@@ -63,7 +63,7 @@ module.exports = (app) ->
 				COL.email
 				email
 			]
-			console.log sql
+			# console.log sql
 			con = app.db.newCon()
 			con.query sql
 			.on 'result', (res)->
@@ -88,7 +88,7 @@ module.exports = (app) ->
 				COL.username
 				username
 			]
-			console.log sql
+			# console.log sql
 			con = app.db.newCon()
 			con.query sql
 			.on 'result', (res)->
@@ -119,7 +119,7 @@ module.exports = (app) ->
 				TNAME
 				COL.email, data.email
 			]
-			console.log sql
+			# console.log sql
 			accountData = {}
 			passTemp = null
 			con = app.db.newCon()

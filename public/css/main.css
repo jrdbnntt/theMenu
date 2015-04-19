@@ -109,3 +109,14 @@ html, body {
 .hasInputError {
 	color: #ECA72C;
 }
+
+
+/*****************************************************************************
+ * HEADER
+ */
+#accountStats {
+	
+}
+#accountStats span {
+	display: block;
+}

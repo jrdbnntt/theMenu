@@ -43,15 +43,21 @@ html(lang='en')
 							li(class = (title == 'Signup'?'active':undefined))
 								a(href='/signup') Sign up
 						else
-							li(class = (title == 'Profile'?'active':undefined))
-								a(href='/user/profile') Profile
 							li
 								a(href='/user/logout') Log out
 
 	
 		#content.container
 			#content-header
-				block content-header
+				.col-sm-9
+					block content-header
+				#accountStats.col-sm-3.text-right.text-top
+					if session.user
+						span: a(href='/user/profile') #{session.user.username}
+						span # Eaters
+						span Last Meal
+						span Next Recipe
+						
 			#content-body
 				block content-body
 			

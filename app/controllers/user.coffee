@@ -57,7 +57,7 @@ module.exports = (app) ->
 			req.body.action?
 				switch req.body.action
 					when 'delete'
-						app.models.Eater.delete req.body.eaterId
+						app.models.Eater.delete req.body.eaterId, req.session.user.accountId
 						.then ()->
 							res.send
 								success: true

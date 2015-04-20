@@ -76,12 +76,14 @@ module.exports = (app) ->
 			
 			return def.promise
 		
-		@delete: (eaterId)->
+		# Be sure they own it
+		@delete: (eaterId, accountId)->
 			def = app.Q.defer()
-			sql = app.vsprintf 'DELETE FROM %s WHERE %s = %i'
+			sql = app.vsprintf 'DELETE FROM %s WHERE %s = %i AND %s = %i'
 			, [
 				TNAME
 				COL.eaterId, eaterId
+				COL.accountId, accountId
 			]
 			# console.log sql
 			con = app.db.newCon()

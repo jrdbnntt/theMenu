@@ -7,3 +7,17 @@ module.exports = (app) ->
 		@profile = (req, res) ->
 			res.render 'user/profile',
 				title: 'Profile'
+				submissions: {}
+				savedRecipes: {}
+				
+		@profile_getAllEaters = (req, res)->
+			res.send
+				success: false
+				body:
+					error: 'Invalid parameters'
+					
+		@profile_addEater = (req, res)->
+			res.send
+				success: false
+				body:
+					error: 'Invalid parameters'

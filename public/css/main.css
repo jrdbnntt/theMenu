@@ -80,9 +80,6 @@ html, body {
 
 
 
-
-
-
 /*****************************************************************************
  * ICONS
  */
@@ -100,6 +97,17 @@ html, body {
 	background-image: url('/img/logo/theMenu-logo-xs.png');
 	width: 100px;
 	height: 83px;
+}
+.icon-loading {
+	margin: auto;
+	display: block;
+	background-position: center center;
+	background-repeat: no-repeat;
+	border-radius: 50%;
+	opacity: .7;
+	width: 48px;
+	height: 48px;
+	background-image: url('/img/loading.gif');
 }
 
 

@@ -4,7 +4,7 @@ block content-header
 
 block content-body
 	h2 Account
-	table.table
+	table.table.col-sm-6
 		tr
 			td Username
 			td #{session.user.username}
@@ -22,13 +22,15 @@ block content-body
 				td Normal
 		
 	h2 Eaters
-	form#addEater(role='form' method='post')
+	form#addEaterForm(role='form' method='post')
 		table.table.table-hover
 			thead
 				tr
 					th Description
 					th.col-xs-1.text-center Chef lvl
 					th.col-xs-2
+			tbody#loading: tr: td(colspan='3')
+				.icon-loading
 			tbody#eaters.vcenter
 				//- Repeat for each
 				tr(data-eaterId="2")
@@ -47,19 +49,19 @@ block content-body
 							span.glyphicon.glyphicon-star-empty
 						.btn.delete
 							span.glyphicon.glyphicon-remove
-			tbody#eaterForm
+			tbody#addEaterFormContainer
 				tr
 					td
-						input.form-control(type="text" placeholder="Describe this person" maxlength='100' required)
+						input.form-control(type="text" placeholder="Describe this person" maxlength='100' name='description' required)
 					td.col-xs-1
-						select.form-control(name='gameId')
+						select.form-control(name='chefLevel')
 							- var i = 0
 							while i <= 10
 								option.form-control(value='#{i}') #{i++}
 					td.col-xs-2.text-center
-						button.btn#submit(type="submit") save
+						button.btn#submit(type="submit") Save
 	.text-center
-		.btn.addNew
+		.btn.addNew(data-glyph='plus')
 			span.glyphicon.glyphicon-plus
 	
 	
@@ -74,6 +76,6 @@ block content-body
 		
 	
 block localJS
-	script(type='text/javascript' src='/js/public/login.js')
+	script(type='text/javascript' src='/js/user/profile.js')
 			
 		

@@ -17,7 +17,13 @@ module.exports = (app) ->
 					error: 'Invalid parameters'
 					
 		@profile_addEater = (req, res)->
-			res.send
-				success: false
-				body:
-					error: 'Invalid parameters'
+			if req.body.description? &&
+			req.body.chefLevel?
+				res.send
+					success: true
+					body: {}
+			else
+				res.send
+					success: false
+					body:
+						error: 'Invalid parameters'

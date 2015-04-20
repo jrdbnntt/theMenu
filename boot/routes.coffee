@@ -39,6 +39,7 @@ module.exports = (app) ->
 	app.get '/user/profile', app.UserController.profile
 	app.post '/user/profile/getAllEaters', jsonParser, app.UserController.profile_getAllEaters
 	app.post '/user/profile/addEater', jsonParser, app.UserController.profile_addEater
+	app.post '/user/profile/eaterAction', jsonParser, app.UserController.profile_eaterAction
 	
 	# Logout
 	app.get '/user/logout', app.UserController.logout

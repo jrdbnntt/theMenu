@@ -36,7 +36,7 @@ $(FORM_ID).submit (e) ->
 			success: (res) ->
 				if res.success
 					endInSuccess()
-					window.location.replace '/user/'
+					window.location.replace '/user/profile'
 				else
 					endInError res.body.error
 					return

@@ -49,7 +49,7 @@ refreshEaters = ()->
 				if res.body.eaters.length > 0
 					for eater in res.body.eaters
 						$eaters.append '
-							<tr date-eaterId='+eater.eaterId+'>
+							<tr data-eaterid='+eater.eaterId+'>
 								<td>'+eater.name+'</td>
 								<td>'+eater.description+'</td>
 								<td class="col-xs-1 text-center">'+eater.chefLevel+'</td>
@@ -58,8 +58,9 @@ refreshEaters = ()->
 									<div class="btn delete"><span class="glyphicon glyphicon-remove"></span></div>
 								</td>
 							</tr>'
+					refreshActionListeners()
 				else
-					$eaters.append '<tr><td colspan="4" class="text-center info"><i>You have no Eaters</i></td></tr>'
+					$eaters.append '<tr><td colspan="4" class="text-center info"><i>You have no Eaters. Click the \'+\' below to add one!</i></td></tr>'
 			else
 				$eaters.append '<tr><td colspan="4" class="text-center danger">Error: ' +
 					res.body.error + ' Try refreshing.</td></tr>'
@@ -160,3 +161,38 @@ $(ID_FORM).submit (e) ->
 		$('#submit').text 'iError!'
 		setEaterFormEnabled true
 		setLoading false
+
+##############################################################################
+# Eater actions
+
+preformEaterAction = (eaterId, action)->
+	if eaterId? && action?
+		console.log '[ACTION] eaterId=' + eaterId + ' action=' + action  
+		$.ajax
+			type: 'POST'
+			url: '/user/profile/eaterAction'
+			data: JSON.stringify 
+				eaterId: eaterId
+				action: action
+			contentType: 'application/json'
+			success: (res) ->
+				if res.success
+					setLoading false
+					refreshEaters()
+				else
+					console.log 'Error: ' + res.body.error
+					setLoading false
+					return
+			error: () ->
+				console.log 'Client Error: Unable to send'
+				setLoading false
+				return
+	else
+		console.log 'Client Error: Invalid action parameters'
+
+refreshActionListeners = ()->
+	$('.delete').click ()->
+		eaterId = $(this).closest('tr').attr 'data-eaterid'
+		console.log 'EI=' + eaterId
+		preformEaterAction eaterId, 'delete'
+

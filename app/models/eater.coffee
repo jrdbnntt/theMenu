@@ -4,7 +4,7 @@
 
 #table constants
 COL = 
-	eaterId: 'accountId'
+	eaterId: 'eaterId'
 	accountId: 'accountId'
 	name: 'name'
 	description: 'description'
@@ -34,7 +34,7 @@ module.exports = (app) ->
 				data.description
 				data.chefLevel
 			]
-			console.log sql
+			# console.log sql
 			con = app.db.newCon()
 			con.query sql
 			.on 'error', (err)->
@@ -47,7 +47,7 @@ module.exports = (app) ->
 			return def.promise
 		
 		@getAllByAccountId: (accountId)->
-			deferred = app.Q.defer()
+			def = app.Q.defer()
 			sql = app.vsprintf 'SELECT * FROM %s WHERE %s = %i ORDER BY %s ASC'
 			, [
 				TNAME
@@ -68,11 +68,30 @@ module.exports = (app) ->
 						chefLevel: parseInt row.chefLevel
 				res.on 'end', (info)->
 					console.log 'Got ' + info.numRows + ' rows from ' + TNAME
-					deferred.resolve result
+					def.resolve result
 			.on 'error', (err)->
 				console.log "> DB: Error on old threadId " + this.tId + " = " + err
-				deferred.reject err
+				def.reject err
 			con.end()
 			
-			return deferred.promise
+			return def.promise
+		
+		@delete: (eaterId)->
+			def = app.Q.defer()
+			sql = app.vsprintf 'DELETE FROM %s WHERE %s = %i'
+			, [
+				TNAME
+				COL.eaterId, eaterId
+			]
+			# console.log sql
+			con = app.db.newCon()
+			con.query sql
+			.on 'error', (err)->
+				console.log "> DB: Error on old threadId " + this.tId + " = " + err
+				def.reject()
+			.on 'end', ()->
+				def.resolve()
+			con.end()
+			
+			return def.promise
 		

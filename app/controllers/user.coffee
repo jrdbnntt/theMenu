@@ -3,7 +3,11 @@ module.exports = (app) ->
 		@logout = (req, res)->
 			req.session.user = undefined
 			res.redirect '/'
-			
+		
+		
+		########################################################################
+		# Profile
+		
 		@profile = (req, res) ->
 			res.render 'user/profile',
 				title: 'Profile'
@@ -27,7 +31,6 @@ module.exports = (app) ->
 			if req.body.name? && 
 			req.body.description? &&
 			req.body.chefLevel?
-			
 				app.models.Eater.createNew
 					accountId: req.session.user.accountId
 					name: req.body.name
@@ -42,6 +45,28 @@ module.exports = (app) ->
 						success: false
 						body:
 							error: err
+			else
+				res.send
+					success: false
+					body:
+						error: 'Invalid parameters'
+		
+		# Handles misc. 
+		@profile_eaterAction = (req, res)->
+			if req.body.eaterId? && 
+			req.body.action?
+				switch req.body.action
+					when 'delete'
+						app.models.Eater.delete req.body.eaterId
+						.then ()->
+							res.send
+								success: true
+								body: {}
+						, (err)->
+							res.send
+								success: false
+								body:
+									error: err
 			else
 				res.send
 					success: false

@@ -78,3 +78,20 @@ module.exports = (app) ->
 					body:
 						error: 'Invalid Parameters ' + JSON.stringify req.body
 		
+		########################################################################
+		# View recipes
+		@recipes = (req, res)->
+			res.render 'public/recipes',
+				title: 'Recipes'
+		@singleRecipe = (req, res)->
+			res.render 'public/singleRecipe',
+				title: 'TODO'
+		
+		########################################################################
+		# View ingredients
+		@ingredients = (req, res)->
+			res.render 'public/ingredients',
+				title: 'Ingredients'
+		@singleIngredient = (req, res)->
+			res.render 'public/singleIngredient',
+				title: 'TODO'

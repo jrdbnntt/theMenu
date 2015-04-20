@@ -113,6 +113,21 @@ html, body {
 	height: 48px;
 	background-image: url('/img/loading.gif');
 }
+.icon-github {
+	margin: auto;
+	display: block;
+	background-position: center center;
+	background-repeat: no-repeat;
+	border-radius: 50%;
+	opacity: .7;
+	width: 36px;
+	height: 36px;
+	background-image: url('/img/GitHub-Mark-32px.png');
+	background-color: #fff;
+}
+.icon-github:hover {
+	opacity: 1.0;
+}
 
 
 /*****************************************************************************

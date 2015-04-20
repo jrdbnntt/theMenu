@@ -36,8 +36,10 @@ html(lang='en')
 						//- Always display
 						li(class = (title == 'Home'?'active':undefined))
 							a(href='/') Home
-						li(class = (title == 'Recipe'?'active':undefined))
-							a(href='/') Recipies
+						li(class = (title == 'Recipes'?'active':undefined))
+							a(href='/recipes') Recipies
+						li(class = (title == 'Ingredients'?'active':undefined))
+							a(href='/ingredients') Ingredients
 						
 						if session.user === undefined
 							li(class = (title == 'Login'?'active':undefined))
@@ -46,7 +48,7 @@ html(lang='en')
 								a(href='/signup') Sign up
 						else
 							li(class = (title == 'Pantry'?'active':undefined))
-								a(href='/') Pantry
+								a(href='/user/pantry') Pantry
 							li
 								a(href='/user/logout') Log out
 
@@ -65,7 +67,9 @@ html(lang='en')
 			#content-body
 				block content-body
 			
-		.footer.container
+		.footer.container.valign
+			br
+			a.btn.icon-github(target='_blank' href='http://github.com/jrdbnntt/theMenu')
 
 
 		//- External Javascript

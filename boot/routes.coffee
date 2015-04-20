@@ -31,6 +31,13 @@ module.exports = (app) ->
 	app.get '/login', app.PublicController.login
 	app.post '/login', jsonParser, app.PublicController.login_submit
 	
+	# Recipes (browse/search)
+	app.get '/recipes', app.PublicController.recipes
+	app.get '/recipes/:recipeId', app.PublicController.singleRecipe
+	
+	# Ingredients (browse/search)
+	app.get '/ingredients', app.PublicController.ingredients
+	app.get '/ingredients/:ingredientId', app.PublicController.singleIngredient
 	
 	###########################################################################
 	# USER PAGES 
@@ -44,6 +51,16 @@ module.exports = (app) ->
 	# Logout
 	app.get '/user/logout', app.UserController.logout
 	
+	# Submit Recipe
+	app.get '/user/add/recipe', app.UserController.addRecipe
+	app.post '/user/add/recipe', jsonParser, app.UserController.addRecipe_submit
+	
+	# Submit Ingredient
+	app.get '/user/add/ingredient', app.UserController.addIngredient
+	app.post '/user/add/ingredient', jsonParser, app.UserController.addIngredient_submit
+	
+	# Pantry
+	app.get '/user/pantry', app.UserController.pantry
 	
 	###########################################################################
 	# ADMIN PAGES

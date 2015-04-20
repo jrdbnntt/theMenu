@@ -72,3 +72,30 @@ module.exports = (app) ->
 					success: false
 					body:
 						error: 'Invalid parameters'
+						
+						
+		########################################################################
+		# Add recipe
+		@addRecipe = (req, res)->
+			res.render 'user/add/recipe',
+				title: 'Add New Recipe'
+		@addRecipe_submit = (req, res)->
+			res.send
+				success: true
+				body: {}
+		
+		########################################################################
+		# Add ingredient
+		@addIngredient = (req, res)->
+			res.render 'user/add/ingredient',
+				title: 'Add New Ingredient'
+		@addIngredient_submit = (req, res)->
+			res.send
+				success: true
+				body: {}
+				
+		########################################################################
+		# Pantry
+		@pantry = (req, res)->
+			res.render 'user/pantry',
+				title: 'Pantry'

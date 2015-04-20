@@ -26,31 +26,27 @@ block content-body
 		table.table.table-hover
 			thead
 				tr
+					th.col-xs-2 Name
 					th Description
 					th.col-xs-1.text-center Chef lvl
 					th.col-xs-2
-			tbody#loading: tr: td(colspan='3')
+			tbody#loading: tr: td(colspan='4')
 				.icon-loading
 			tbody#eaters.vcenter
-				//- Repeat for each
-				tr(data-eaterId="2")
-					td Jared the Chef
-					td.col-xs-1.text-center 10
-					td.col-xs-2.text-right
-						.btn.owner
-							span.glyphicon.glyphicon-star
-						.btn.delete
-							span.glyphicon.glyphicon-remove
-				tr(date-eaterId="3")
-					td Frankie the pleb
-					td.col-xs-1.text-center 0
-					td.col-xs-2.text-right
-						.btn.owner
-							span.glyphicon.glyphicon-star-empty
-						.btn.delete
-							span.glyphicon.glyphicon-remove
+				//- Repeat for each. (example)
+					tr(data-eaterId=2)
+						td.col-xs-2 Jared the Chef
+						td Super awesome descriptuion gogogogogo
+						td.col-xs-1.text-center 10
+						td.col-xs-2.text-right
+							.btn.owner
+								span.glyphicon.glyphicon-star
+							.btn.delete
+								span.glyphicon.glyphicon-remove
 			tbody#addEaterFormContainer
 				tr
+					td.col-xs-2
+						input.form-control(type="text" placeholder="Name" maxlength='100' name='name' required)
 					td
 						input.form-control(type="text" placeholder="Describe this person" maxlength='100' name='description' required)
 					td.col-xs-1

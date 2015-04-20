@@ -28,9 +28,47 @@ setLoading false
 ##############################################################################
 # Eater list
 
+ID_EATERS = '#eaters'
+
 refreshEaters = ()->
 	console.log 'Refreshing eaters...'
-
+	$eaters = $(ID_EATERS)
+	$eaters.empty()
+	setLoading true
+	
+	# Get them all
+	$.ajax
+		type: 'POST'
+		url: '/user/profile/getAllEaters'
+		data: JSON.stringify {}
+		contentType: 'application/json'
+		success: (res) ->
+			setLoading false
+			if res.success
+				$('#submit').text 'Saved!'
+				if res.body.eaters.length > 0
+					for eater in res.body.eaters
+						$eaters.append '
+							<tr date-eaterId='+eater.eaterId+'>
+								<td>'+eater.name+'</td>
+								<td>'+eater.description+'</td>
+								<td class="col-xs-1 text-center">'+eater.chefLevel+'</td>
+								<td class="col-xs-2 text-right">
+									<div class="btn owner"><span class="glyphicon glyphicon-star-empty"></span></div>
+									<div class="btn delete"><span class="glyphicon glyphicon-remove"></span></div>
+								</td>
+							</tr>'
+				else
+					$eaters.append '<tr><td colspan="4" class="text-center info"><i>You have no Eaters</i></td></tr>'
+			else
+				$eaters.append '<tr><td colspan="4" class="text-center danger">Error: ' +
+					res.body.error + ' Try refreshing.</td></tr>'
+				return
+		error: () ->
+			$eaters.append '<tr><td colspan="4" class="text-center danger">Error! Try refreshing.</td></tr>'
+			setLoading false
+			return
+refreshEaters()
 
 
 ##############################################################################
@@ -84,10 +122,12 @@ $(ID_FORM).submit (e) ->
 	$('#submit').attr 'disabled', 'disabled'
 	
 	formData =
+		name:				$("input[name='name']").val().trim()
 		description:	$("input[name='description']").val().trim()
 		chefLevel:		$("select[name='chefLevel']").val()
 	
-	if formData.description? && 
+	if formData.name? &&
+	formData.description? && 
 	0 <= formData.chefLevel &&
 	formData.chefLevel <= 10
 		$('#submit').text 'Saving...'

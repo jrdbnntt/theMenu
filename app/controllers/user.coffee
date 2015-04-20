@@ -11,17 +11,37 @@ module.exports = (app) ->
 				savedRecipes: {}
 				
 		@profile_getAllEaters = (req, res)->
-			res.send
-				success: false
-				body:
-					error: 'Invalid parameters'
-					
-		@profile_addEater = (req, res)->
-			if req.body.description? &&
-			req.body.chefLevel?
+			app.models.Eater.getAllByAccountId req.session.user.accountId
+			.then (eaters)->
 				res.send
 					success: true
-					body: {}
+					body:
+						eaters: eaters
+			, (err)->
+				res.send
+					success: false
+					body:
+						error: err
+						
+		@profile_addEater = (req, res)->
+			if req.body.name? && 
+			req.body.description? &&
+			req.body.chefLevel?
+			
+				app.models.Eater.createNew
+					accountId: req.session.user.accountId
+					name: req.body.name
+					description: req.body.description
+					chefLevel: req.body.chefLevel
+				.then ()->
+					res.send
+						success: true
+						body: {}
+				, (err)->
+					res.send
+						success: false
+						body:
+							error: err
 			else
 				res.send
 					success: false

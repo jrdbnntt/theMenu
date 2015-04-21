@@ -7,7 +7,6 @@ module.exports = (app) ->
 		
 		########################################################################
 		# Profile
-		
 		@profile = (req, res) ->
 			res.render 'user/profile',
 				title: 'Profile'
@@ -90,10 +89,65 @@ module.exports = (app) ->
 			res.render 'user/add/ingredient',
 				title: 'Add New Ingredient'
 		@addIngredient_submit = (req, res)->
-			res.send
-				success: true
-				body: {}
+			input = null
+			form = new app.formidable.IncomingForm()
+			form.parse req, (err, fields, files)->
+				console.log app.util.inspect fields
+				input = fields
+				if err
+					res.send 
+						success: false
+						body:
+							error: err
+
+			form.on 'end', (fields, files)->
+				# Temporary location of our uploaded file
+				srcPath = this.openedFiles[0].path
 				
+				# The file name of the uploaded file
+				fileName = app.models.Image.genFileName this.openedFiles[0].name
+				
+				# Location where we want to copy the uploaded file
+				dstLocation = app.models.Image.uploadDir
+
+				app.fs.move srcPath, dstLocation + fileName
+				, (err)->
+					if !err
+						console.log '[UPLOAD]' + fileName + ' moved to ' + dstLocation
+						
+						# Save in database
+						if input.name? &&
+						input.byMass? &&
+						input.description?
+							app.models.Image.createNew
+								name: input.name
+								byMass: if input.byMass == 'true' then 1 else 0
+								description: input.description
+								fileName: fileName
+								accountId: req.session.user.accountId
+							.then (imageId)->
+								console.log 'imageId: ' + app.util.inspect imageId
+								
+								res.send 
+									success: true
+									body:
+										href: '/public/ingredients/' + fileName
+							, (err)->
+								res.send 
+									success: false
+									body:
+										error: err
+						else
+							res.send 
+								success: false
+								body:
+									error: 'Missing parameters'
+					else
+						res.send 
+							success: false
+							body:
+								error: err
+			
 		########################################################################
 		# Pantry
 		@pantry = (req, res)->

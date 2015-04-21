@@ -1,9 +1,41 @@
-extend ../layout
+extend ../../layout
 block content-header
 	h1 Add New Ingredient
 
 block content-body
-	h3 TODO
+	.formResult
+	form#addIngredientForm.form-horizontal(role="form" method="post" action='/user/add/ingredient', enctype='multipart/form-data')
+		.form-group
+			label.control-label.col-sm-3(for="name") Name
+			.col-sm-6
+				input.form-control(type="text" name="name" placeholder="Enter the name of the ingredient" maxlength='45' required)
+		.form-group
+			label.control-label.col-sm-3(for="image") Image
+			.col-sm-6
+				input.form-control(type="file" name="image" accept="image/*" required)
+		
+		.form-group
+			label.control-label.col-sm-3(for="byMass") Measurement
+			.radio.col-sm-3
+				label
+					input(type='radio' name='byMass' value="false" required)
+					| Volume (ml/tsp)
+			.radio.col-sm-3
+				label
+					input(type='radio' name='byMass' value="true")
+					| Weight (g/oz)
+
+		.form-group
+			label.control-label.col-sm-3(for="description") Description
+			.col-sm-6
+				textarea.form-control(rows="5" name="description" placeholder="Describe the ingredient"  maxlength='2000' required)
+				
+		br
+		.form-group
+			.formError.col-sm-offset-3.col-sm-4
+			.col-sm-2.text-right
+				button#submit.btn.btn-default(type="submit") Submit
 
 block localJS
 	script(type='text/javascript' src='/js/user/add/ingredient.js')
+		

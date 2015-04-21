@@ -14,6 +14,9 @@ moment = require 'moment'
 util = require 'util'
 vsprintf = require('sprintf-js').vsprintf
 bcrypt = require 'bcrypt'
+qt = require 'quickthumb'
+fs = require 'fs-extra'
+formidable = require 'formidable'
 
 # Local lib
 autoload = require '../lib/autoload'
@@ -26,7 +29,10 @@ module.exports = (app) ->
 	app.bcrypt = bcrypt
 	app.moment = moment
 	app.Q = Q
-		
+	app.fs = fs
+	app.formidable = formidable
+	app.qt = qt
+	
 	# Autoload controllers
 	autoload 'app/controllers', app
 		
@@ -82,6 +88,23 @@ module.exports = (app) ->
 				else
 					# console.log '> DB: Connection closed with old threadId ' + this.tId + ' without error'
 			return con
+	app.db.newMultiCon = ()->
+			config = app.db.setup
+			config.multiStatements = true
+			con = new app.db.Client()
+			con.connect config
+			con.on 'connect', ()->
+				this.tId = this.threadId #so it isnt deleted
+				# console.log '> DB: New connection established with threadId ' + this.tId
+			.on 'error', (err)->
+				console.log '> DB: Error on threadId ' + this.tId + '= ' + err
+			.on 'close', (hadError)->
+				if hadError
+					console.log '> DB: Connection closed with old threadId ' + this.tId + ' WITH ERROR!'
+				else
+					# console.log '> DB: Connection closed with old threadId ' + this.tId + ' without error'
+			return con
+
 
 	#setup models (must setup db first)
 	app.models = {}

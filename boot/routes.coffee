@@ -12,6 +12,7 @@ module.exports = (app) ->
 	#Body parsers
 	jsonParser = bodyParser.json()
 	urlencodedParser = bodyParser.urlencoded {extended: false}
+
 	
 	# Enforce ACL
 	app.use acl
@@ -57,7 +58,7 @@ module.exports = (app) ->
 	
 	# Submit Ingredient
 	app.get '/user/add/ingredient', app.UserController.addIngredient
-	app.post '/user/add/ingredient', jsonParser, app.UserController.addIngredient_submit
+	app.post '/user/add/ingredient', app.UserController.addIngredient_submit
 	
 	# Pantry
 	app.get '/user/pantry', app.UserController.pantry
@@ -65,6 +66,37 @@ module.exports = (app) ->
 	###########################################################################
 	# ADMIN PAGES
 	
+	
+	###########################################################################
+	# Testing
+	app.get '/test', (req, res)->
+		res.writeHead(200, {'Content-Type': 'text/html' });
+		form = '<form action="/upload" enctype="multipart/form-data" method="post">Add a title: <input name="title" type="text" /><br><br><input multiple="multiple" name="upload" type="file" /><br><br><input type="submit" value="Upload" /></form>';
+		res.end form
+	
+	app.post '/upload', (req, res)->
+		form = new app.formidable.IncomingForm()
+		form.parse req, (err, fields, files)->
+			res.writeHead 200, {'content-type': 'text/plain'}
+			res.write 'received upload:\n\n'
+			res.end app.util.inspect 
+				fields: fields
+				files: files
+
+		form.on 'end', (fields, files)->
+			# Temporary location of our uploaded file
+			temp_path = this.openedFiles[0].path
+			# The file name of the uploaded file
+			file_name = Math.random().toString(32).substr(2) + this.openedFiles[0].name
+			# Location where we want to copy the uploaded file
+			new_location = 'public/img/uploads/'
+
+			app.fs.move temp_path, new_location + file_name, (err)->  
+				if err
+					console.error err
+				else
+					console.log 'success!'
+
 	
 	# Page not found (404) ####################################################
 	# This should always be the LAST route specified

@@ -14,7 +14,7 @@ module.exports = (app) ->
 	TREL = null
 	
 	class app.models.Image
-		constructor: ()->		
+		constructor: ()->
 		
 		@uploadDir: 'public/img/uploads'
 		

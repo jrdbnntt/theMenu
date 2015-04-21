@@ -115,28 +115,36 @@ module.exports = (app) ->
 					if !err
 						console.log '[UPLOAD]' + fileName + ' moved to ' + dstLocation
 						
-						# Save in database
+						# Save image location
 						if input.name? &&
 						input.byMass? &&
 						input.description?
 							app.models.Image.createNew
-								name: input.name
-								byMass: if input.byMass == 'true' then 1 else 0
-								description: input.description
 								fileName: fileName
 								accountId: req.session.user.accountId
-							.then (imageId)->
-								console.log 'imageId: ' + app.util.inspect imageId
-								
-								res.send 
-									success: true
-									body:
-										href: '/public/ingredients/' + fileName
+							.then (imageId)->								
+								# Save Ingredient
+								app.models.Ingredient.createNew
+									imageId: imageId
+									name: input.name
+									byMass: input.byMass
+									description: input.description
+									submissionAccountId: req.session.user.accountId
+								.then ()->
+									res.send 
+										success: true
+										body:
+											href: '/public/ingredients/' + imageId
+								, (err)->
+									res.send 
+										success: false
+										body:
+											error: 'Problem saving ingredient'
 							, (err)->
 								res.send 
 									success: false
 									body:
-										error: err
+										error: 'Problem saving image'
 						else
 							res.send 
 								success: false
@@ -146,7 +154,13 @@ module.exports = (app) ->
 						res.send 
 							success: false
 							body:
-								error: err
+								error: 'Problem moving image'
+			.on 'error', ()->
+				res.send 
+					success: false
+					body:
+						error: 'Problem retrieving image'
+				
 			
 		########################################################################
 		# Pantry

@@ -39,7 +39,7 @@ module.exports = (app) ->
 			con.query sql
 			.on 'error', (err)->
 				console.log "> DB: Error on old threadId " + this.tId + " = " + err
-				def.reject()
+				def.reject '' + err
 			.on 'end', ()->
 				def.resolve()
 			con.end()
@@ -71,7 +71,7 @@ module.exports = (app) ->
 					def.resolve result
 			.on 'error', (err)->
 				console.log "> DB: Error on old threadId " + this.tId + " = " + err
-				def.reject err
+				def.reject '' + err
 			con.end()
 			
 			return def.promise
@@ -90,7 +90,7 @@ module.exports = (app) ->
 			con.query sql
 			.on 'error', (err)->
 				console.log "> DB: Error on old threadId " + this.tId + " = " + err
-				def.reject()
+				def.reject '' + err
 			.on 'end', ()->
 				def.resolve()
 			con.end()

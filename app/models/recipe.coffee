@@ -109,4 +109,45 @@ module.exports = (app) ->
 			con.end()
 			
 			return def.promise
-					
+		
+		# Gets basic info of those that match search criteria
+		@getSearchSimple: (pageTotal, pageNum, search)->
+			def = app.Q.defer()
+			sql = app.vsprintf '
+				SELECT DISTINCT r.%s,r.%s,img.%s
+					FROM %s AS r
+					LEFT JOIN %s AS img ON r.%s=img.%s ' +
+					(if search? then '
+						WHERE
+							MATCH(r.title,r.description) AGAINST ("'+search+'" WITH QUERY EXPANSION) ' else 'ORDER BY UPPER(r.title) ASC')
+							
+			, [
+				COL.recipeId
+				COL.title
+				COL.fileName
+								
+				TNAME, TREL.image
+				
+				COL.exampleImageId, COL.imageId
+			]
+			# console.log sql
+			result = []
+			con = app.db.newCon()
+			con.query sql 
+			.on 'result', (res)->
+				res.on 'row', (row)->
+					result.push 
+						ingredientId: parseInt row.ingredientId
+						name: row.name
+						fileName: if row.fileName? then row.fileName else PLACHOLDER_IMAGE
+				res.on 'end', (info)->
+					console.log 'Got ' + info.numRows + ' rows from ' + TNAME
+					def.resolve 
+						totalCount: result.length
+						rows: result.slice (pageTotal*(pageNum-1)), (pageTotal*pageNum)
+			.on 'error', (err)->
+				console.log "> DB: Error on old threadId " + this.tId + " = " + err
+				def.reject '' + err
+			con.end()
+			
+			return def.promise

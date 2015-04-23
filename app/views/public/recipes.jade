@@ -3,11 +3,55 @@ block content-header
 	h1 Recipes
 
 block content-body
-	.row
-		.col-sm-3
-			a.btn.btn-default(href='/user/add/recipe') Add New Recipe
-	
-	p Ut viverra vitae leo eget hendrerit. Aenean feugiat justo sapien, pharetra feugiat libero hendrerit a. Sed ut ex at diam rhoncus ultrices. Cras maximus scelerisque sapien, at eleifend justo ornare ut. Vivamus cursus, ex a sagittis ultricies, turpis arcu viverra ex, et consequat enim quam a velit.
+	- var totalPages = Math.floor(totalCount/pageTotal) + 1
 
+	.row.text-center
+		.col-sm-3
+			a.btn.btn-default(href='/user/add/recipe') Add New recipe
+	br
+	form#searchForm(role='form' method='get').row
+		input(type='hidden' name='pageNum' value='#{pageNum}' required)
+		.col-sm-4
+			span
+				| Displaying #{(recipes.length > 0)? (pageNum-1)*pageTotal + 1 : 0} - #{(recipes.length > 0)? (pageNum-1)*pageTotal + recipes.length : 0} of #{totalCount} results
+				if isSearch
+					|  for "#{search}"
+		.col-sm-6.form-inline.pull-right
+			.form-group
+				label.control-label(for='pageTotal') View 
+				select.select.form-control(name='pageTotal'  required)
+					- var i = 25
+					while i <= 100
+						if pageTotal == i
+							option(value='#{i}' selected) #{i}
+						else
+							option(value='#{i}') #{i}
+						- i += 25
+				input.form-control(type='text' name='search' minlength='4' maxlength='84')
+				button#submit.btn.btn-default(type="submit") Search
+					
+	.row.thumb-table.text-center
+		if recipes.length == 0
+			br
+			i.col-xs-12.text-center No recipes found
+		else
+			for recipe in recipes
+				.thumb-item
+					a.link-none(href='#{"/recipes/" + recipe.recipeId}')
+						.thumb-img(style='background-image:url(#{"\"/img/uploads/" + recipe.fileName + "\""});')
+						.caption.text-center
+							h4 #{recipe.title}
+	
+	.row
+		- var newUrl = '/recipes?' + (isSearch ? 'search=' + search + '&' : '') + 'pageTotal=' + pageTotal + '&pageNum='
+		.col-sm-2
+			if pageNum > 1
+				a.btn.btn-default(href='#{newUrl + (pageNum-1)}') Previous
+		.col-sm-8.text-center
+			span #{pageNum} of #{totalPages}
+		.col-sm-2
+			if pageNum < totalPages
+				a.btn.btn-default(href='#{newUrl + (pageNum+1)}') Next
+				
 block localJS
 	script(type='text/javascript' src='/js/public/recipes.js')

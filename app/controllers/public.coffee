@@ -81,8 +81,48 @@ module.exports = (app) ->
 		########################################################################
 		# View recipes
 		@recipes = (req, res)->
-			res.render 'public/recipes',
-				title: 'Recipes'
+			title = 'Recipes'
+			view = 'public/recipes'
+			search = req.query.search
+			pageNum = req.query.pageNum
+			pageTotal = req.query.pageTotal
+			
+			if search?
+				search = search.replace(/%20/g, ' ').replace(/['"]/g,'').trim()
+				if search < 4 || search > 84
+					search = undefined
+			if pageNum? && !isNaN(pageNum)
+				pageNum = parseInt pageNum
+				if pageNum < 1
+					pageNum = 1
+			else 
+				pageNum = 1
+			if pageTotal? && !isNaN(pageTotal)
+				pageTotal = parseInt pageTotal
+				if pageTotal < 25 || pageTotal > 100
+					pageTotal = 25
+			else
+				pageTotal = 25
+			
+			app.models.Recipe.getSearchSimple pageTotal, pageNum, search
+			.then (result)->
+				res.render view,
+					title: title
+					isSearch: search?
+					search: search
+					pageNum: pageNum
+					pageTotal: pageTotal
+					recipes: result.rows
+					totalCount: result.totalCount
+			, (err)->
+				res.render view,
+					title: title
+					isSearch: search?
+					search: search
+					pageNum: pageNum
+					pageTotal: pageTotal
+					recipes: []
+					totalCount: 0
 		@singleRecipe = (req, res)->
 			res.render 'public/singleRecipe',
 				title: 'TODO'

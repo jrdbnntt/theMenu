@@ -3,6 +3,8 @@ block content-header
 	h1 Recipes
 
 block content-body
+	script.
+		var recipeId = #{recipe.recipeId}
 	.text-center
 		h2 #{recipe.title}
 		img.recipe-img(src='#{"/img/uploads/" + recipe.fileName}' alt='#{recipe.name}')
@@ -11,5 +13,27 @@ block content-body
 	h4 Description
 	p #{recipe.description}
 	
+	h2 Minimum Ingredients
+	table.table.table-hover
+		thead
+			tr
+				th
+				th Name
+				th Qty
+				th.col-xs-2
+		tbody#ingredients
+			tr: td(colspan=4).icon-loading
+	
+	h2 Instructions
+	table.table.table-hover
+		thead
+			tr
+				th.col-xs-1.text-center #
+				th.col-xs-10 Description
+				th.col-xs-1
+		tbody#instructions
+			tr: td(colspan=4).icon-loading
+			
+	
 block localJS
-	script(type='text/javascript' src='/js/public/recipes.js')
+	script(type='text/javascript' src='/js/public/singleRecipe.js')

@@ -6,8 +6,8 @@ TNAME = 'Recipe'
 TREL = 
 	image: 'Image'
 	account: 'Account'
-	ingredient: 'ingredient'
-	instruction: 'instruction'
+	ingredient: 'Ingredient'
+	instruction: 'Instruction'
 	recipe_ingredient_requirement: 'Recipe_Ingredient_requirement'
 COL = 
 	ingredientId: 'ingredientId'
@@ -23,7 +23,8 @@ COL =
 	
 	fileName: 'fileName'
 	imageId: 'imageId'
-	
+	byMass: 'byMass'
+	name: 'name'
 	accountId: 'accountId'
 	username: 'username'
 	
@@ -192,6 +193,46 @@ module.exports = (app) ->
 						description: row.description
 						username: row.username
 						submissionAccountId: row.submissionAccountId
+				res.on 'end', (info)->
+					console.log 'Got ' + info.numRows + ' rows from ' + TNAME
+					def.resolve result
+			.on 'error', (err)->
+				console.log "> DB: Error on old threadId " + this.tId + " = " + err
+				def.reject '' + err
+			con.end()
+			
+			return def.promise
+			
+		@getIngSimpleByRecipeId: (recipeId)->
+			def = app.Q.defer()
+			sql = app.vsprintf '
+				SELECT i.%s,i.%s,i.%s,img.%s
+					FROM %s AS ir
+					INNER JOIN %s AS i ON ir.%s=i.%s
+					LEFT JOIN %s AS img ON i.%s=img.%s
+					WHERE ir.%s = %i 
+				'
+			, [
+				COL.ingredientId
+				COL.name
+				COL.byMass
+				COL.fileName	
+				TREL.recipe_ingredient_requirement
+				TREL.ingredient, COL.ingredientId, COL.ingredientId
+				TREL.image, COL.imageId, COL.imageId
+				COL.recipeId, recipeId
+			]
+			# console.log sql
+			result = []
+			con = app.db.newCon()
+			con.query sql 
+			.on 'result', (res)->
+				res.on 'row', (row)->
+					result.push
+						ingredientId: parseInt row.ingredientId
+						name: row.name
+						fileName: if row.fileName? then row.fileName else PLACHOLDER_IMAGE
+						byMass: row.byMass == '1'
 				res.on 'end', (info)->
 					console.log 'Got ' + info.numRows + ' rows from ' + TNAME
 					def.resolve result

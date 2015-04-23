@@ -34,3 +34,43 @@ module.exports = (app) ->
 					success: false
 					body:
 						error: 'Invalid parameters'
+						
+		@getIngSimpleByRecipeId = (req, res)->
+			recipeId = req.body.recipeId
+			if recipeId?
+				app.models.Recipe.getIngSimpleByRecipeId recipeId
+				.then (ingredients)->
+					res.send
+						success: true
+						body:
+							ingredients: ingredients
+				, (err)->
+					res.send
+						success: false
+						body:
+							error: err
+			else
+				res.send
+					success: false
+					body:
+						error: 'Invalid parameters'
+		
+		@getInstructionsByRecipeId = (req, res)->
+			recipeId = req.body.recipeId
+			if recipeId?
+				app.models.Instruction.getAllByRecipeId(recipeId)
+				.then (instructions)->
+					res.send
+						success: true
+						body:
+							instructions: instructions
+				, (err)->
+					res.send
+						success: false
+						body:
+							error: err
+			else
+				res.send
+					success: false
+					body:
+						error: 'Invalid parameters'

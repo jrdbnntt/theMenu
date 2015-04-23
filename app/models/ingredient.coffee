@@ -162,6 +162,8 @@ module.exports = (app) ->
 			
 			return def.promise
 			
+			
+		
 		@getByNameSearch: (search)->
 			def = app.Q.defer()
 			sql = app.vsprintf '

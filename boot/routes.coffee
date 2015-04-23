@@ -71,6 +71,8 @@ module.exports = (app) ->
 	# API
 	app.post '/api/searchIngredientNames', urlencodedParser, app.APIController.searchIngredientNames
 	app.post '/api/getImagePathById', jsonParser, app.APIController.getImagePathById
+	app.post '/api/getIngSimpleByRecipeId', jsonParser, app.APIController.getIngSimpleByRecipeId
+	app.post '/api/getInstructionsByRecipeId', jsonParser, app.APIController.getInstructionsByRecipeId
 
 	
 	# Page not found (404) ####################################################

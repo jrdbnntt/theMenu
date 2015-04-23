@@ -51,4 +51,34 @@ module.exports = (app) ->
 			con.end()
 			
 			return def.promise
+		
+		@getAllByRecipeId: (recipeId)->
+			def = app.Q.defer()
+			sql = app.vsprintf 'SELECT %s,%s FROM %s WHERE %s = %i ORDER BY %s'
+			, [
+				COL.step
+				COL.description
+				
+				TNAME
+				
+				COL.recipeId, recipeId
+				COL.step
+			]
 			
+			result = []
+			con = app.db.newCon()
+			con.query sql 
+			.on 'result', (res)->
+				res.on 'row', (row)->
+					result.push
+						step: parseInt row.step
+						description: row.description
+				res.on 'end', (info)->
+					console.log 'Got ' + info.numRows + ' rows from ' + TNAME
+					def.resolve result
+			.on 'error', (err)->
+				console.log "> DB: Error on old threadId " + this.tId + " = " + err
+				def.reject '' + err
+			con.end()
+			
+			return def.promise

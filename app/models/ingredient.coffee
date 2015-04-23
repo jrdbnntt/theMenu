@@ -6,6 +6,7 @@
 TNAME = 'Ingredient'
 TREL = 
 	image: 'Image'
+	account: 'Account'
 COL = 
 	ingredientId: 'ingredientId'
 	submissionAccountId: 'submissionAccountId'
@@ -15,6 +16,9 @@ COL =
 	byMass: 'byMass'
 	
 	fileName: 'fileName'
+	
+	accountId: 'accountId'
+	username: 'username'
 
 PLACHOLDER_IMAGE = 'missingIngredient.png'
 
@@ -86,7 +90,7 @@ module.exports = (app) ->
 			.on 'result', (res)->
 				res.on 'row', (row)->
 					result.push 
-						ingredientId: row.ingredientId
+						ingredientId: parseInt row.ingredientId
 						name: row.name
 						fileName: if row.fileName? then row.fileName else PLACHOLDER_IMAGE
 				res.on 'end', (info)->
@@ -94,6 +98,57 @@ module.exports = (app) ->
 					def.resolve 
 						totalCount: result.length
 						rows: result.slice (pageTotal*(pageNum-1)), (pageTotal*pageNum)
+			.on 'error', (err)->
+				console.log "> DB: Error on old threadId " + this.tId + " = " + err
+				def.reject '' + err
+			con.end()
+			
+			return def.promise
+		
+		@getSingle: (ingredientId)->
+			def = app.Q.defer()
+			sql = app.vsprintf '
+				SELECT i.%s,i.%s,i.%s,i.%s,i.%s, img.%s,a.%s
+					FROM %s AS i
+					LEFT JOIN %s AS img ON i.%s=img.%s
+					INNER JOIN %s AS a ON i.%s=a.%s
+					WHERE i.%s = %i
+				'
+			, [
+				COL.ingredientId
+				COL.name
+				COL.description
+				COL.byMass
+				COL.submissionAccountId
+				
+				COL.fileName
+				
+				COL.username
+								
+				TNAME, 
+				
+				TREL.image, COL.imageId, COL.imageId
+				TREL.account, COL.submissionAccountId, COL.accountId
+				
+				COL.ingredientId, ingredientId
+			]
+			console.log sql
+			result = {}
+			con = app.db.newCon()
+			con.query sql 
+			.on 'result', (res)->
+				res.on 'row', (row)->
+					result =
+						ingredientId: parseInt row.ingredientId
+						name: row.name
+						fileName: if row.fileName? then row.fileName else PLACHOLDER_IMAGE
+						description: row.description
+						byMass: row.byMass == '1'
+						username: row.username
+						submissionAccountId: row.submissionAccountId
+				res.on 'end', (info)->
+					console.log 'Got ' + info.numRows + ' rows from ' + TNAME
+					def.resolve result
 			.on 'error', (err)->
 				console.log "> DB: Error on old threadId " + this.tId + " = " + err
 				def.reject '' + err

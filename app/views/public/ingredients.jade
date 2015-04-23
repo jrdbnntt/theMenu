@@ -15,12 +15,12 @@ block content-body
 			span
 				| Displaying #{(ingredients.length > 0)? (pageNum-1)*pageTotal + 1 : 0} - #{(ingredients.length > 0)? (pageNum-1)*pageTotal + ingredients.length : 0} of #{totalCount} results
 				if isSearch
-					|  matching "#{search}"
+					|  for "#{search}"
 		.col-sm-6.form-inline.pull-right
 			.form-group
 				label.control-label(for='pageTotal') View 
 				select.select.form-control(name='pageTotal'  required)
-					- var i = 2
+					- var i = 25
 					while i <= 100
 						if pageTotal == i
 							option(value='#{i}' selected) #{i}

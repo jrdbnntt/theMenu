@@ -96,9 +96,6 @@ module.exports = (app) ->
 			pageNum = req.query.pageNum
 			pageTotal = req.query.pageTotal
 			
-			MIN_PAGE_TOTAL = 2
-			MAX_PAGE_TOTAL = 100
-			
 			if search?
 				search = search.replace(/%20/g, ' ').replace(/['"]/g,'').trim()
 				if search < 4 || search > 84
@@ -111,10 +108,10 @@ module.exports = (app) ->
 				pageNum = 1
 			if pageTotal? && !isNaN(pageTotal)
 				pageTotal = parseInt pageTotal
-				if pageTotal < MIN_PAGE_TOTAL || pageTotal > MAX_PAGE_TOTAL
-					pageTotal = MIN_PAGE_TOTAL
+				if pageTotal < 25 || pageTotal > 100
+					pageTotal = 25
 			else
-				pageTotal = MIN_PAGE_TOTAL
+				pageTotal = 25
 			
 			app.models.Ingredient.getSearchSimple pageTotal, pageNum, search
 			.then (result)->
@@ -138,5 +135,17 @@ module.exports = (app) ->
 				
 				
 		@singleIngredient = (req, res)->
-			res.render 'public/singleIngredient',
-				title: 'TODO'
+			view = 'public/singleIngredient'
+			ingredientId = req.params.ingredientId
+			
+			if !isNaN ingredientId
+				app.models.Ingredient.getSingle ingredientId
+				.then (result)->
+					res.render view,
+						title: result.name
+						ingredient: result
+				, (err)->
+					res.redirect '/ingredients'
+			else
+				res.redirect '/ingredients'
+			

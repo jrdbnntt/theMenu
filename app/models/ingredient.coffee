@@ -30,7 +30,7 @@ module.exports = (app) ->
 			console.log app.util.inspect data
 			def = app.Q.defer()
 			sql = app.vsprintf 'INSERT INTO %s (%s,%s,%s,%s,%s) ' +
-				' VALUES (%i,%i,"%s","%s",%i)'
+				' VALUES (%i,%i,"%s","%s",%i); SELECT LAST_INSERT_ID() AS %s;'
 			, [
 				TNAME
 				COL.submissionAccountId
@@ -44,17 +44,26 @@ module.exports = (app) ->
 				data.name
 				data.description
 				if data.byMass == 'true' then 1 else 0
+				
+				COL.ingredientId
 			]
-			console.log sql
-			con = app.db.newCon()
+			# console.log sql
+			con = app.db.newMultiCon()
 			qcnt = 0
-			imageId = null
+			ingredientId = null
 			con.query sql
+			.on 'result', (res)->
+				++qcnt
+				res.on 'row', (row)->
+					if qcnt == 2
+						ingredientId = parseInt row.ingredientId
+				res
 			.on 'error', (err)->
 				console.log "> DB: Error on old threadId " + this.tId + " = " + err
 				def.reject '' + err
 			.on 'end', (info)->
-				def.resolve()
+				console.log 'Completed ' + qcnt + ' queries on ' + TNAME
+				def.resolve ingredientId
 			con.end()
 			
 			return def.promise

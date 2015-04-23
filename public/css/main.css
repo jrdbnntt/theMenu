@@ -185,6 +185,9 @@ html, body {
 	-o-background-size: contain;
 	background-size: contain;
 }
+.caption {
+	max-width: 110px;
+}
 
 .ingredient-img {
 	display: block;

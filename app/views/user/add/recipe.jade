@@ -3,7 +3,72 @@ block content-header
 	h1 Add New Recipe
 
 block content-body
-	h3 TODO
+	.formResult
+	form#addRecipeForm.form-horizontal(role="form" method="post" action='/user/add/ingredient', enctype='multipart/form-data')
+		.form-group
+			label.control-label.col-sm-3(for="name") Name
+			.col-sm-6
+				input.form-control(type="text" name="name" placeholder="Enter the name of the recipe" maxlength='45' required)
+		.form-group
+			label.control-label.col-sm-3(for="image") Example Result
+			.col-sm-6
+				input.form-control(type="file" name="image" accept="image/*" required)
+
+		.form-group
+			label.control-label.col-sm-3(for="description") Description
+			.col-sm-6
+				textarea.form-control(rows="5" name="description" placeholder="Describe the recipe"  maxlength='2000' required)
+		
+		.form-group
+			label.control-label.col-sm-3(for="difficulty") Difficulty
+			.col-xs-2
+				select.form-control(name='chefLevel')
+					- var i = 0
+					while i <= 10
+						option.form-control(value='#{i}') #{i++}
+		
+		
+		h2 Instructions
+		table.table.table-hover
+			thead
+				tr
+					th.col-xs-1.text-center Step
+					th.col-xs-10 Description
+					th.col-xs-1
+			tbody#instructions
+				//- Repeat for each. (example)
+				tr(data-step=0)
+					td.col-xs-1.text-center 1
+					td.col-xs-10 Preheat oven to 450 degrees
+					td.col-xs-1.text-right
+						.btn.delete
+							span.glyphicon.glyphicon-remove
+				tr(data-step=1)
+					td.col-xs-1.text-center 2
+					td.col-xs-10 Light your house on fire
+					td.col-xs-1.text-right
+						.btn.delete
+							span.glyphicon.glyphicon-remove
+			tbody#addInstruction
+				tr
+					td.col-xs-1
+					td.col-xs-10
+						textarea.form-control(rows='3' placeholder="What next?" maxlength='2000' name='instructionDescription')
+
+					td.col-xs-1.text-center
+						button.btn.btn-default Add
+		.text-center
+			.btn.addNew(data-glyph='plus')
+				span.glyphicon.glyphicon-plus
+		
+		
+		br
+		br
+		.text-center
+			.formError
+		.text-center
+			button#submit.btn.btn-default.btn-lg(type="submit") Create!
+
 
 block localJS
 	script(type='text/javascript' src='/js/user/add/recipe.js')

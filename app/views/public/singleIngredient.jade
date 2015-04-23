@@ -8,6 +8,9 @@ block content-body
 		img.ingredient-img(src='#{"/img/uploads/" + ingredient.fileName}' alt='#{ingredient.name}')
 		p: i Submitted by #{ingredient.username}
 	br
+	p #{ingredient.name} is measured by its #{ingredient.byMass? 'mass' : 'volume'}.
+	br
+	h4 Description
 	p #{ingredient.description}
 	
 block localJS

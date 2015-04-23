@@ -130,11 +130,11 @@ module.exports = (app) ->
 									byMass: input.byMass
 									description: input.description
 									submissionAccountId: req.session.user.accountId
-								.then ()->
+								.then (ingredientId)->
 									res.send 
 										success: true
 										body:
-											href: '/public/ingredients/' + imageId
+											href: '/ingredients/' + ingredientId
 								, (err)->
 									res.send 
 										success: false

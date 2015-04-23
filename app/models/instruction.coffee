@@ -24,7 +24,7 @@ module.exports = (app) ->
 		constructor: ()->		
 		
 		@createNew: (data) ->
-			console.log app.util.inspect data
+			# console.log app.util.inspect data
 			def = app.Q.defer()
 			sql = app.vsprintf 'INSERT INTO %s (%s,%s,%s) ' +
 				' VALUES (%i,%i,"%s")'

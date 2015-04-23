@@ -1,0 +1,15 @@
+extend ../layout
+block content-header
+	h1 Recipes
+
+block content-body
+	.text-center
+		h2 #{recipe.title}
+		img.recipe-img(src='#{"/img/uploads/" + recipe.fileName}' alt='#{recipe.name}')
+		p: i Submitted by #{recipe.username}
+	br
+	h4 Description
+	p #{recipe.description}
+	
+block localJS
+	script(type='text/javascript' src='/js/public/recipes.js')

@@ -124,8 +124,19 @@ module.exports = (app) ->
 					recipes: []
 					totalCount: 0
 		@singleRecipe = (req, res)->
-			res.render 'public/singleRecipe',
-				title: 'TODO'
+			view = 'public/singleRecipe'
+			recipeId = req.params.recipeId
+			
+			if !isNaN recipeId
+				app.models.Recipe.getSingle recipeId
+				.then (result)->
+					res.render view,
+						title: result.title
+						recipe: result
+				, (err)->
+					res.redirect '/recipes'
+			else
+				res.redirect '/recipes'
 		
 		########################################################################
 		# View ingredients (pages [1,total])

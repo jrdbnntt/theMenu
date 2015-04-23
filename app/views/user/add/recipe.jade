@@ -6,9 +6,9 @@ block content-body
 	.formResult
 	form#addRecipeForm.form-horizontal(role="form" method="post" action='/user/add/ingredient', enctype='multipart/form-data')
 		.form-group
-			label.control-label.col-sm-3(for="name") Name
+			label.control-label.col-sm-3(for="title") Title
 			.col-sm-6
-				input.form-control(type="text" name="name" placeholder="Enter the name of the recipe" maxlength='45' required)
+				input.form-control(type="text" name="title" placeholder="Enter the name of the recipe" maxlength='100' required)
 		.form-group
 			label.control-label.col-sm-3(for="image") Example Result
 			.col-sm-6
@@ -22,33 +22,52 @@ block content-body
 		.form-group
 			label.control-label.col-sm-3(for="difficulty") Difficulty
 			.col-xs-2
-				select.form-control(name='chefLevel')
+				select.form-control(name='difficulty' required)
 					- var i = 0
 					while i <= 10
 						option.form-control(value='#{i}') #{i++}
+		.form-group
+			label.control-label.col-sm-3(for="prepTime") Prep Time (m)
+			.col-sm-6
+				input.form-control(type="number" name="prepTime" placeholder="How long does it take to make?" min='1' required)
+		.form-group
+			label.control-label.col-sm-3(for="eaterAmount") Feeds
+			.col-sm-6
+				input.form-control(type="number" name="eaterAmount" placeholder="How many people does this feed?"  min='1' required)
 		
+		
+		
+		h2 Minimum Ingredients
+		table.table.table-hover
+			thead
+				tr
+					th
+					th Name
+					th Qty
+					th.col-xs-2
+			tbody#ingredients
+				
+			tbody#addIngredient
+				tr
+					td.col-xs-1
+					td.col-xs-10
+						input#searchIngredients.form-control(type='text' placeholder="What next?" maxlength='100' name='ingredientName')
+
+					td.col-xs-1.text-center
+						//- .btn.btn-default Add
+		.text-center
+			#modifyIngredient.btn.addNew(data-glyph='plus')
+				span.glyphicon.glyphicon-plus
 		
 		h2 Instructions
 		table.table.table-hover
 			thead
 				tr
-					th.col-xs-1.text-center Step
+					th.col-xs-1.text-center #
 					th.col-xs-10 Description
 					th.col-xs-1
 			tbody#instructions
-				//- Repeat for each. (example)
-				tr(data-step=0)
-					td.col-xs-1.text-center 1
-					td.col-xs-10 Preheat oven to 450 degrees
-					td.col-xs-1.text-right
-						.btn.delete
-							span.glyphicon.glyphicon-remove
-				tr(data-step=1)
-					td.col-xs-1.text-center 2
-					td.col-xs-10 Light your house on fire
-					td.col-xs-1.text-right
-						.btn.delete
-							span.glyphicon.glyphicon-remove
+				
 			tbody#addInstruction
 				tr
 					td.col-xs-1
@@ -56,9 +75,9 @@ block content-body
 						textarea.form-control(rows='3' placeholder="What next?" maxlength='2000' name='instructionDescription')
 
 					td.col-xs-1.text-center
-						button.btn.btn-default Add
+						.btn.btn-default Add
 		.text-center
-			.btn.addNew(data-glyph='plus')
+			#modifyInstruction.btn.addNew(data-glyph='plus')
 				span.glyphicon.glyphicon-plus
 		
 		
@@ -71,4 +90,5 @@ block content-body
 
 
 block localJS
+	script(type='text/javascript' src='/js/autocomplete/jquery.autocomplete.min.js')
 	script(type='text/javascript' src='/js/user/add/recipe.js')

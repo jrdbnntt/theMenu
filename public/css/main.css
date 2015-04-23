@@ -171,7 +171,7 @@ html, body {
 	margin: .5em;
 	padding: .5em;
 	background-color: #FFFFFF;
-	border-radius: .5em;
+	border-radius: .2em;
 }
 .thumb-img {
 	width: 110px;
@@ -184,7 +184,13 @@ html, body {
 	-moz-background-size: contain;
 	-o-background-size: contain;
 	background-size: contain;
+	border-radius: .2em;
 }
+.thumb-img.thumb-small {
+	width: 50px;
+	height: 50px;
+}
+
 .caption {
 	max-width: 110px;
 }
@@ -198,4 +204,15 @@ html, body {
 	margin-top: 1em;
 	margin-left: auto;
 	margin-right: auto;
+	border-radius: .2em;
 }
+
+/*****************************************************************************
+ * AUTOCOMPLETE
+ */
+ .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+ .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+ .autocomplete-selected { background: #F0F0F0; }
+ .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+ .autocomplete-group { padding: 2px 5px; }
+ .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }

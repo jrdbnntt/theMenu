@@ -78,13 +78,13 @@ module.exports = (app) ->
 				COL.imageId, imageId
 			]
 			
-			result = []
+			result = {}
 			con = app.db.newCon()
 			con.query sql 
 			.on 'result', (res)->
 				res.on 'row', (row)->
-					result.push 
-						path: row.path
+					result = 
+						path: '/img/uploads/' + row.fileName
 				res.on 'end', (info)->
 					console.log 'Got ' + info.numRows + ' rows from ' + TNAME
 					def.resolve result

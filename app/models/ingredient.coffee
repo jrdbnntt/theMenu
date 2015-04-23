@@ -67,9 +67,6 @@ module.exports = (app) ->
 			con.end()
 			
 			return def.promise
-		
-		# Simply returns all of them
-		@getAll: ()->
 			
 		
 		# Gets basic info of those that match search criteria
@@ -81,7 +78,7 @@ module.exports = (app) ->
 					LEFT JOIN %s AS img ON i.%s=img.%s ' +
 					(if search? then '
 						WHERE
-							MATCH(i.name,i.description) AGAINST ("'+search+'" WITH QUERY EXPANSION) ' else '')
+							MATCH(i.name,i.description) AGAINST ("'+search+'" WITH QUERY EXPANSION) ' else 'ORDER BY UPPER(i.name) ASC')
 							
 			, [
 				COL.ingredientId
@@ -92,7 +89,7 @@ module.exports = (app) ->
 				
 				COL.imageId, COL.imageId
 			]
-			console.log sql
+			# console.log sql
 			result = []
 			con = app.db.newCon()
 			con.query sql 
@@ -141,7 +138,7 @@ module.exports = (app) ->
 				
 				COL.ingredientId, ingredientId
 			]
-			console.log sql
+			# console.log sql
 			result = {}
 			con = app.db.newCon()
 			con.query sql 
@@ -165,4 +162,38 @@ module.exports = (app) ->
 			
 			return def.promise
 			
+		@getByNameSearch: (search)->
+			def = app.Q.defer()
+			sql = app.vsprintf '
+				SELECT %s,%s,%s
+					FROM %s
+					WHERE LOWER(%s) LIKE "%%%s%%"
+				'
+			, [
+				COL.ingredientId
+				COL.name
+				COL.imageId
+				TNAME
+				COL.name
+				search.toLowerCase()
+			]
+			# console.log sql
+			result = []
+			con = app.db.newCon()
+			con.query sql 
+			.on 'result', (res)->
+				res.on 'row', (row)->
+					result.push
+						data: parseInt row.ingredientId
+						value: row.name
+						imageId: parseInt row.imageId
+				res.on 'end', (info)->
+					console.log 'Got ' + info.numRows + ' rows from ' + TNAME
+					def.resolve result
+			.on 'error', (err)->
+				console.log "> DB: Error on old threadId " + this.tId + " = " + err
+				def.reject '' + err
+			con.end()
 			
+			return def.promise
+		

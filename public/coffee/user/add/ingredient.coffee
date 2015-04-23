@@ -23,7 +23,7 @@ $(FORM_ID).submit (e) ->
 	
 	jForm = new FormData()
 	jForm.append 'name', 			$("input[name='name']").val().trim()
-	jForm.append 'byMass',			$("input[name='byMass']").val() == 'true'
+	jForm.append 'byMass',			$("input[name='byMass']:checked").val() == 'true'
 	jForm.append 'description',	$("textarea[name='description']").val().trim()
 	jForm.append 'image', 			$("input[name='image']").get(0).files[0]
 	

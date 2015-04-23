@@ -16,7 +16,7 @@ module.exports = (app) ->
 	class app.models.Image
 		constructor: ()->
 		
-		@uploadDir: 'public/img/uploads'
+		@uploadDir: 'public/img/uploads/'
 		
 		@genFileName: (original)->
 			original = original.replace(/\s/g,'_').replace(/[\W[^.]]/ig,'-')

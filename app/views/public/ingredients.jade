@@ -3,12 +3,55 @@ block content-header
 	h1 Ingredients
 
 block content-body
-	.row
+	- var totalPages = Math.floor(totalCount/pageTotal) + 1
+
+	.row.text-center
 		.col-sm-3
 			a.btn.btn-default(href='/user/add/ingredient') Add New Ingredient
+	br
+	form#searchForm(role='form' method='get').row
+		input(type='hidden' name='pageNum' value='#{pageNum}' required)
+		.col-sm-4
+			span
+				| Displaying #{(ingredients.length > 0)? (pageNum-1)*pageTotal + 1 : 0} - #{(ingredients.length > 0)? (pageNum-1)*pageTotal + ingredients.length : 0} of #{totalCount} results
+				if isSearch
+					|  matching "#{search}"
+		.col-sm-6.form-inline.pull-right
+			.form-group
+				label.control-label(for='pageTotal') View 
+				select.select.form-control(name='pageTotal'  required)
+					- var i = 2
+					while i <= 100
+						if pageTotal == i
+							option(value='#{i}' selected) #{i}
+						else
+							option(value='#{i}') #{i}
+						- i += 25
+				input.form-control(type='text' name='search' minlength='4' maxlength='84')
+				button#submit.btn.btn-default(type="submit") Search
+					
+	.row.thumb-table.text-center
+		if ingredients.length == 0
+			br
+			i.col-xs-12.text-center No ingredients found
+		else
+			for ingredient in ingredients
+				.thumb-item
+					a.link-none(href='#{"/ingredients/" + ingredient.ingredientId}')
+						.thumb-img(style='background-image:url(#{"\"/img/uploads/" + ingredient.fileName + "\""});')
+						.caption.text-center
+							h4 #{ingredient.name}
 	
-	p Donec ultrices, tellus nec tincidunt facilisis, elit velit vulputate sem, eu consectetur libero ligula ac quam. Morbi arcu ligula, pellentesque vitae elit eget, aliquam suscipit nunc. Duis scelerisque dui arcu, eget fringilla eros faucibus pretium. Donec posuere felis dui, non pulvinar velit feugiat sed. Duis mattis mauris id tristique dapibus. Duis eleifend, mauris et elementum ullamcorper, risus nulla dignissim lectus, feugiat interdum nunc nisl eget justo. Duis tincidunt magna et est viverra vestibulum. Proin ultricies viverra ultrices.
-		
+	.row
+		- var newUrl = '/ingredients?' + (isSearch ? 'search=' + search + '&' : '') + 'pageTotal=' + pageTotal + '&pageNum='
+		.col-sm-2
+			if pageNum > 1
+				a.btn.btn-default(href='#{newUrl + (pageNum-1)}') Previous
+		.col-sm-8.text-center
+			span #{pageNum} of #{totalPages}
+		.col-sm-2
+			if pageNum < totalPages
+				a.btn.btn-default(href='#{newUrl + (pageNum+1)}') Next
 
 block localJS
 	script(type='text/javascript' src='/js/public/ingredients.js')

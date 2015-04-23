@@ -88,10 +88,55 @@ module.exports = (app) ->
 				title: 'TODO'
 		
 		########################################################################
-		# View ingredients
+		# View ingredients (pages [1,total])
 		@ingredients = (req, res)->
-			res.render 'public/ingredients',
-				title: 'Ingredients'
+			title = 'Ingredients'
+			view = 'public/ingredients'
+			search = req.query.search
+			pageNum = req.query.pageNum
+			pageTotal = req.query.pageTotal
+			
+			MIN_PAGE_TOTAL = 2
+			MAX_PAGE_TOTAL = 100
+			
+			if search?
+				search = search.replace(/%20/g, ' ').replace(/['"]/g,'').trim()
+				if search < 4 || search > 84
+					search = undefined
+			if pageNum? && !isNaN(pageNum)
+				pageNum = parseInt pageNum
+				if pageNum < 1
+					pageNum = 1
+			else 
+				pageNum = 1
+			if pageTotal? && !isNaN(pageTotal)
+				pageTotal = parseInt pageTotal
+				if pageTotal < MIN_PAGE_TOTAL || pageTotal > MAX_PAGE_TOTAL
+					pageTotal = MIN_PAGE_TOTAL
+			else
+				pageTotal = MIN_PAGE_TOTAL
+			
+			app.models.Ingredient.getSearchSimple pageTotal, pageNum, search
+			.then (result)->
+				res.render view,
+					title: title
+					isSearch: search?
+					search: search
+					pageNum: pageNum
+					pageTotal: pageTotal
+					ingredients: result.rows
+					totalCount: result.totalCount
+			, (err)->
+				res.render view,
+					title: title
+					isSearch: search?
+					search: search
+					pageNum: pageNum
+					pageTotal: pageTotal
+					ingredients: []
+					totalCount: 0
+				
+				
 		@singleIngredient = (req, res)->
 			res.render 'public/singleIngredient',
 				title: 'TODO'

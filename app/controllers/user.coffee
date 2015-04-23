@@ -126,7 +126,7 @@ module.exports = (app) ->
 								# Save Ingredient
 								app.models.Ingredient.createNew
 									imageId: imageId
-									name: input.name
+									name: input.name.charAt(0).toUpperCase() + input.name.slice(1)
 									byMass: input.byMass
 									description: input.description
 									submissionAccountId: req.session.user.accountId
